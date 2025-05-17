@@ -1,0 +1,122 @@
+{
+  "project_info": {
+    "project_number": "958477195185",
+    "project_id": "opakuecommerce",
+    "storage_bucket": "opakuecommerce.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:958477195185:android:360a7baecb06337da80f90",
+        "android_client_info": {
+          "package_name": "com.jesstest"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "958477195185-5db7b30bbdlon786ih5ej8htrduggiq8.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBt4eAHVcoUNABEypy6YTPpvS1XdmENGW8"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "958477195185-5db7b30bbdlon786ih5ej8htrduggiq8.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "958477195185-8hdv6nrndv2jqde9ki0fbij0a5vprbqf.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "org.reactjs.native.example.OpakuEcommerce"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:958477195185:android:24c48f6f9f53c08ba80f90",
+        "android_client_info": {
+          "package_name": "com.opakuecommerce"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "958477195185-9ohghnrl6dig26q0rfnbi6m7ku9lb60s.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.opakuecommerce",
+            "certificate_hash": "048d6d911840bd546118d1d82e4f3211d32a0eb2"
+          }
+        },
+        {
+          "client_id": "958477195185-c1334u3785vpujl928lhmal3r32ptvvd.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.opakuecommerce",
+            "certificate_hash": "a1e28be81d53ba10ea186b9edda2515b4d831fe1"
+          }
+        },
+        {
+          "client_id": "958477195185-dn01gi4mnbm71p73o7i7ktbv1e2p30c5.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.opakuecommerce",
+            "certificate_hash": "f616d6b0c00de19651b10641e356556da3d80cb8"
+          }
+        },
+        {
+          "client_id": "958477195185-dqu28hut7660dsc86l5n9toikeul1136.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.opakuecommerce",
+            "certificate_hash": "5e8f16062ea3cd2c4a0d547876baa6f38cabf625"
+          }
+        },
+        {
+          "client_id": "958477195185-kat3ke0mo070i6ilmu4eutnjgbjnkgpi.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.opakuecommerce",
+            "certificate_hash": "827a90224c33d248c64aa45ccf56d0f9409a0650"
+          }
+        },
+        {
+          "client_id": "958477195185-5db7b30bbdlon786ih5ej8htrduggiq8.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBt4eAHVcoUNABEypy6YTPpvS1XdmENGW8"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "958477195185-5db7b30bbdlon786ih5ej8htrduggiq8.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "958477195185-8hdv6nrndv2jqde9ki0fbij0a5vprbqf.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "org.reactjs.native.example.OpakuEcommerce"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

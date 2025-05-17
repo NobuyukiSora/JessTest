@@ -5,9 +5,12 @@
  * @format
  */
 
-import React from 'react';
+import React, {useEffect, useState} from 'react';
+import messaging, { getMessaging, getToken } from '@react-native-firebase/messaging';
+
 import type {PropsWithChildren} from 'react';
 import {
+  Alert,
   ScrollView,
   StatusBar,
   StyleSheet,
@@ -23,6 +26,7 @@ import {
   LearnMoreLinks,
   ReloadInstructions,
 } from 'react-native/Libraries/NewAppScreen';
+import { getApp } from '@react-native-firebase/app';
 
 type SectionProps = PropsWithChildren<{
   title: string;
@@ -56,10 +60,90 @@ function Section({children, title}: SectionProps): React.JSX.Element {
 
 function App(): React.JSX.Element {
   const isDarkMode = useColorScheme() === 'dark';
+  const mess = getMessaging(getApp()); 
 
   const backgroundStyle = {
     backgroundColor: isDarkMode ? Colors.darker : Colors.lighter,
   };
+
+  useEffect(() => {
+    // checkToken();
+    useToken()
+  }, []);
+
+  // const checkToken = async () => {
+  //   const fcmToken = await getToken();
+  //   console.log("GET FCM TOKEN", fcmToken);
+  //   if (fcmToken) {
+  //     console.log("ADA")
+  //     console.log(fcmToken);
+  //   }
+  // };
+
+  const getFcmToken = async () => {
+    const fcmToken = await getToken(mess); // Gunakan getToken dari modular API
+    if (fcmToken) {
+      console.log(fcmToken);
+      console.log('Your Firebase Token is:', fcmToken);
+    } else {
+      console.log('Failed', 'No Token Received');
+    }
+  };
+  const useToken = async () => {
+    const authStatus = await messaging().requestPermission();
+    const enabled =
+      authStatus === messaging.AuthorizationStatus.AUTHORIZED ||
+      authStatus === messaging.AuthorizationStatus.PROVISIONAL;
+      console.log(enabled)
+    if (enabled) {
+      getFcmToken();
+      console.log('Authorization status:', authStatus);
+    }
+  };
+
+  const [initialNotificationData, setInitialNotificationData] = useState<any>();
+  const [foregroundNotificationData, setForegroundNotificationData] =
+    useState<any>();
+  const [openedAppNotificationData, setOpenedAppNotificationData] =
+    useState<any>();
+
+  useEffect(() => {
+    // Handle when the app is opened from a background/quit state by tapping a notification
+    messaging()
+      .getInitialNotification()
+      .then(remoteMessage => {
+        if (remoteMessage?.data) {
+          console.log('Initial Notification Data:', remoteMessage);
+          setInitialNotificationData(remoteMessage?.data);
+          // You can now use initialNotificationData to perform your custom navigation
+        }
+      });
+
+    // Listen for foreground notifications (when the app is open)
+    const unsubscribeForeground = messaging().onMessage(async remoteMessage => {
+      if (remoteMessage?.data) {
+        console.log('Foreground Notification Data:', remoteMessage);
+        setForegroundNotificationData(remoteMessage.data);
+        // You can decide if you want to navigate immediately on foreground
+      }
+    });
+
+    // Listen for when the user taps on a notification while the app is in the foreground
+    const unsubscribeOpenedApp = messaging().onNotificationOpenedApp(
+      remoteMessage => {
+        if (remoteMessage?.data) {
+          console.log('Notification Opened App Data:', remoteMessage);
+          setOpenedAppNotificationData(remoteMessage.data);
+          // Use openedAppNotificationData to perform your custom navigation
+        }
+      },
+    );
+
+    return () => {
+      unsubscribeForeground();
+      unsubscribeOpenedApp();
+    };
+  }, []);
 
   /*
    * To keep the template simple and small we're adding padding to prevent view
@@ -78,10 +162,9 @@ function App(): React.JSX.Element {
         barStyle={isDarkMode ? 'light-content' : 'dark-content'}
         backgroundColor={backgroundStyle.backgroundColor}
       />
-      <ScrollView
-        style={backgroundStyle}>
+      <ScrollView style={backgroundStyle}>
         <View style={{paddingRight: safePadding}}>
-          <Header/>
+          <Header />
         </View>
         <View
           style={{
@@ -89,6 +172,24 @@ function App(): React.JSX.Element {
             paddingHorizontal: safePadding,
             paddingBottom: safePadding,
           }}>
+          {initialNotificationData && (
+            <Text>
+              Initial Notification Data:{' '}
+              {JSON.stringify(initialNotificationData)}
+            </Text>
+          )}
+          {foregroundNotificationData && (
+            <Text>
+              Foreground Notification Data:{' '}
+              {JSON.stringify(foregroundNotificationData)}
+            </Text>
+          )}
+          {openedAppNotificationData && (
+            <Text>
+              Opened App Notification Data:{' '}
+              {JSON.stringify(openedAppNotificationData)}
+            </Text>
+          )}
           <Section title="Step One">
             Edit <Text style={styles.highlight}>App.tsx</Text> to change this
             screen and then come back to see your edits.
