@@ -6,11 +6,15 @@
  */
 
 import React, {useEffect, useState} from 'react';
-import messaging, { getMessaging, getToken } from '@react-native-firebase/messaging';
-
+import messaging, {
+  getMessaging,
+  getToken,
+} from '@react-native-firebase/messaging';
+import analytics from '@react-native-firebase/analytics';
 import type {PropsWithChildren} from 'react';
 import {
   Alert,
+  Platform,
   ScrollView,
   StatusBar,
   StyleSheet,
@@ -26,7 +30,7 @@ import {
   LearnMoreLinks,
   ReloadInstructions,
 } from 'react-native/Libraries/NewAppScreen';
-import { getApp } from '@react-native-firebase/app';
+import {getApp} from '@react-native-firebase/app';
 
 type SectionProps = PropsWithChildren<{
   title: string;
@@ -60,7 +64,9 @@ function Section({children, title}: SectionProps): React.JSX.Element {
 
 function App(): React.JSX.Element {
   const isDarkMode = useColorScheme() === 'dark';
-  const mess = getMessaging(getApp()); 
+  const mess = getMessaging(getApp());
+
+  const [loop, setloop] = useState(true);
 
   const backgroundStyle = {
     backgroundColor: isDarkMode ? Colors.darker : Colors.lighter,
@@ -68,7 +74,7 @@ function App(): React.JSX.Element {
 
   useEffect(() => {
     // checkToken();
-    useToken()
+    useToken();
   }, []);
 
   // const checkToken = async () => {
@@ -83,7 +89,7 @@ function App(): React.JSX.Element {
   const getFcmToken = async () => {
     const fcmToken = await getToken(mess); // Gunakan getToken dari modular API
     if (fcmToken) {
-      console.log(fcmToken);
+      console.log(Platform.OS, fcmToken);
       console.log('Your Firebase Token is:', fcmToken);
     } else {
       console.log('Failed', 'No Token Received');
@@ -94,7 +100,6 @@ function App(): React.JSX.Element {
     const enabled =
       authStatus === messaging.AuthorizationStatus.AUTHORIZED ||
       authStatus === messaging.AuthorizationStatus.PROVISIONAL;
-      console.log(enabled)
     if (enabled) {
       getFcmToken();
       console.log('Authorization status:', authStatus);
@@ -111,11 +116,16 @@ function App(): React.JSX.Element {
     // Handle when the app is opened from a background/quit state by tapping a notification
     messaging()
       .getInitialNotification()
-      .then(remoteMessage => {
+      .then(async remoteMessage => {
         if (remoteMessage?.data) {
           console.log('Initial Notification Data:', remoteMessage);
           setInitialNotificationData(remoteMessage?.data);
           // You can now use initialNotificationData to perform your custom navigation
+          await analytics().logEvent('custom_notif_received', {
+            title: remoteMessage?.notification?.title,
+            notification_text: remoteMessage?.notification?.body,
+          });
+          console.log(remoteMessage);
         }
       });
 
@@ -124,20 +134,25 @@ function App(): React.JSX.Element {
       if (remoteMessage?.data) {
         console.log('Foreground Notification Data:', remoteMessage);
         setForegroundNotificationData(remoteMessage.data);
-        // You can decide if you want to navigate immediately on foreground
+        // You can decide if you want to navigate immediately on foreground\
       }
     });
 
     // Listen for when the user taps on a notification while the app is in the foreground
     const unsubscribeOpenedApp = messaging().onNotificationOpenedApp(
-      remoteMessage => {
+      async remoteMessage => {
         if (remoteMessage?.data) {
-          console.log('Notification Opened App Data:', remoteMessage);
+          console.log(
+            'Notification Opened App Data:',
+            remoteMessage?.notification,
+          );
           setOpenedAppNotificationData(remoteMessage.data);
           // Use openedAppNotificationData to perform your custom navigation
         }
       },
     );
+
+    messaging().subscribeToTopic('promoMay');
 
     return () => {
       unsubscribeForeground();
